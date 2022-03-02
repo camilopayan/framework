@@ -86,6 +86,17 @@ class KeyGenerateCommand extends Command
             return false;
         }
 
+        $modelsWithEncryptedAttributes = $this->getModelsWithEncryptedAttributes();
+
+        if (count($modelsWithEncryptedAttributes) !== 0 &&
+            (! $this->confirmToProceed(
+                'There are attributes encrypted with your existing that may need to be re-encrypted with a new key!',
+                function () { return; }
+        ))
+        ) {
+            return false;
+        }
+
         $this->writeNewEnvironmentFileWith($key);
 
         return true;
@@ -117,4 +128,22 @@ class KeyGenerateCommand extends Command
 
         return "/^APP_KEY{$escaped}/m";
     }
+
+    /**
+     * Gets any models that have encrypted attributes.
+     *
+     * @return array
+     */
+    protected function getModelsWithEncryptedAttributes()
+    {
+        $modelsWithEncryptedAttrs = [];
+        foreach (get_declared_classes() as $class) {
+            // Figure out if it's a subclass of Model or continue if not
+            // Get attributes
+            // Search for encrypted fields
+            // If so, add to array
+        }
+        return $modelsWithEncryptedAttributes;
+    }
+
 }
